@@ -14,9 +14,8 @@ app = FastAPI(title="Heart Disease Prediction API")
 logging.basicConfig(level=logging.INFO)
 
 # Load model and scaler
-model = joblib.load("model.pkl")
-scaler = joblib.load("scaler.pkl")
-
+model = joblib.load("artifacts/model.pkl")
+scaler = joblib.load("artifacts/scaler.pkl")
 
 @app.post("/predict")
 def predict_heart_disease(features: list):
