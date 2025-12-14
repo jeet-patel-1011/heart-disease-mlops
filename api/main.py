@@ -1,10 +1,12 @@
 """
 main.py
 
-FastAPI application for serving the ML model.
+FastAPI application for serving the heart disease ML model.
+Uses Pydantic for request validation (production best practice).
 """
 
 from fastapi import FastAPI
+from pydantic import BaseModel
 import joblib
 import logging
 import numpy as np
@@ -17,15 +19,21 @@ logging.basicConfig(level=logging.INFO)
 model = joblib.load("artifacts/model.pkl")
 scaler = joblib.load("artifacts/scaler.pkl")
 
+
+# Define request schema
+class PredictionRequest(BaseModel):
+    features: list
+
+
 @app.post("/predict")
-def predict_heart_disease(features: list):
+def predict_heart_disease(request: PredictionRequest):
     """
     Predict heart disease from input features.
     """
 
-    logging.info(f"Received input: {features}")
+    logging.info(f"Received input: {request.features}")
 
-    features_array = np.array(features).reshape(1, -1)
+    features_array = np.array(request.features).reshape(1, -1)
     features_scaled = scaler.transform(features_array)
 
     prediction = model.predict(features_scaled)[0]
