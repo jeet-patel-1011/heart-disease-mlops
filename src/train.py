@@ -17,6 +17,8 @@ import os
 import mlflow
 import mlflow.sklearn
 import pandas as pd
+import joblib
+import os
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
@@ -78,3 +80,13 @@ if __name__ == "__main__":
         train_and_log_model(
             model, model_name, X_train, X_test, y_train, y_test
         )
+
+    # Save the best model and scaler for inference
+    os.makedirs("artifacts", exist_ok=True)
+
+    best_model = models["Random_Forest"]  # assuming RF performs best
+
+    joblib.dump(best_model, "artifacts/model.pkl")
+    joblib.dump(scaler, "artifacts/scaler.pkl")
+
+    print("Saved model and scaler to artifacts/ directory")
